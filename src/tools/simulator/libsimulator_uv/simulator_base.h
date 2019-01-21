@@ -143,6 +143,9 @@ public:
     }
     void set_current_player(player_ptr_t p) { cmd_player_ = p; }
     const player_ptr_t &get_current_player() const { return cmd_player_; }
+    
+    std::vector<player_ptr_t> get_all_players_list();
+    std::vector<player_ptr_t> get_all_connecting_players();
 
     virtual int dispatch_message(player_ptr_t player, const void *buffer, size_t sz) = 0;
     virtual void exec_cmd(player_ptr_t player, const std::string &cmd) = 0;
