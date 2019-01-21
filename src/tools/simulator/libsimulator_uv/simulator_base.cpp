@@ -231,7 +231,7 @@ simulator_base::simulator_base() : is_closing_(false), exec_path_(NULL) {
     shell_opts_.protocol_log = "protocol.log";
     shell_opts_.no_interactive = false;
     shell_opts_.buffer_.resize(65536);
-    shell_opts_.tick_timer_interval = 1000; // 1000 ms for default
+    shell_opts_.tick_timer_interval = 200; // 200 ms for default
 
     signals_.is_used = false;
     tick_timer_.is_used = false;
@@ -338,7 +338,7 @@ static void simulator_base_timer_cb(uv_timer_t *handle) {
 }
 
 void simulator_base::setup_timer() {
-    if (tick_timer_.is_used && 0 == shell_opts_.tick_timer_interval) {
+    if (tick_timer_.is_used || 0 == shell_opts_.tick_timer_interval) {
         return;
     }
     tick_timer_.is_used = true;
@@ -544,6 +544,26 @@ int simulator_base::insert_cmd(player_ptr_t player, const std::string &cmd) {
     shell_cmd_manager_.cmds.push_back(std::pair<player_ptr_t, std::string>(player, cmd));
     uv_async_send(&async_cmd_);
     return 0;
+}
+
+std::vector<simulator_base::player_ptr_t> simulator_base::get_all_players_list() {
+    std::vector<player_ptr_t> ret;
+    ret.reserve(players_.size());
+    for (std::map<std::string, player_ptr_t>::iterator iter = players_.begin(); iter != players_.end(); ++iter) {
+        ret.push_back(iter->second);
+    }
+
+    return ret;
+}
+
+std::vector<simulator_base::player_ptr_t> simulator_base::get_all_connecting_players() {
+    std::vector<player_ptr_t> ret;
+    ret.reserve(connecting_players_.size());
+    for (std::set<player_ptr_t>::iterator iter = connecting_players_.begin(); iter != connecting_players_.end(); ++iter) {
+        ret.push_back(*iter);
+    }
+
+    return ret;
 }
 
 void simulator_base::libuv_on_async_cmd(uv_async_t *handle) {
