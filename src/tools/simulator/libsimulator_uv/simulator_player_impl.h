@@ -71,6 +71,8 @@ public:
 
     // this function must be thread-safe
     int insert_cmd(const std::string &cmd);
+    
+    inline bool is_closing() const { return is_closing_; }
 private:
     static void libuv_on_dns_callback(uv_getaddrinfo_t *req, int status, struct addrinfo *res);
     static void libuv_on_connected(uv_connect_t *req, int status);
