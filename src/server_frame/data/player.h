@@ -174,7 +174,7 @@ public:
     void               set_version(const std::string &version) { version_ = version; };
 
     const hello::DClientDeviceInfo &get_client_info() const { return client_info_; }
-    void                            set_client_info(const hello::DClientDeviceInfo &info) { protobuf_mini_dumper_copy(client_info_, info); }
+    void                            set_client_info(const hello::DClientDeviceInfo &info) { protobuf_copy_message(client_info_, info); }
 
     /**
      * @brief 是否完整执行过初始化

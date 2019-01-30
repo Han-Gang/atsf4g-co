@@ -47,7 +47,7 @@ int32_t actor_action_ss_req_base::init_msg(msg_ref_type msg, uint64_t dst_pd) {
 }
 
 int32_t actor_action_ss_req_base::init_msg(msg_ref_type msg, uint64_t dst_pd, msg_cref_type req_msg) {
-    protobuf_mini_dumper_copy(*msg.mutable_head(), req_msg.head());
+    protobuf_copy_message(*msg.mutable_head(), req_msg.head());
     init_msg(msg, dst_pd);
 
     // set task information

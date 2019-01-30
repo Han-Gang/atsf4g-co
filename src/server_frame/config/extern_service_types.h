@@ -15,10 +15,10 @@ namespace atframe {
 
         struct logic_service_type {
             enum type {
-                EN_LST_LOGINSVR = 0x81,
-                EN_LST_GAMESVR = 0x82,
+                EN_LST_LOGINSVR = 35,
+                EN_LST_GAMESVR  = 36,
             };
         };
-    }
-}
+    } // namespace component
+} // namespace atframe
 #endif

@@ -12,7 +12,6 @@
 
 
 #include <google/protobuf/message.h>
-#include <google/protobuf/repeated_field.h>
 #include <google/protobuf/text_format.h>
 
 /**
@@ -25,27 +24,28 @@ const char *protobuf_mini_dumper_get_readable(const ::google::protobuf::Message 
 
 
 /**
- * @brief 拷贝protobuf数据
- * @note protobuf内部检查类型不正确会abort掉，使用这个接口可以把类型检查提前到编译期
- * @param dst 目标
- * @param src 源
+ * @brief 返回错误码文本描述
+ * @param error_code 错误码，需要定义在MTSvrErrorDefine或MTErrorDefine里
+ * @return 错误码的文本描述，永远不会返回NULL
  */
-template <typename TPROTO>
-inline void protobuf_mini_dumper_copy(TPROTO &dst, const TPROTO &src) {
-    dst.CopyFrom(src);
-}
+const char *protobuf_mini_dumper_get_error_msg(int error_code);
+
 
 /**
- * @brief 拷贝protobuf repeated数据
- * @note protobuf内部检查类型不正确会abort掉，使用这个接口可以把类型检查提前到编译期
- * @param dst 目标
- * @param src 源
+ * @brief protobuf 数据拷贝
+ * @note 加这个接口是为了解决protobuf的CopyFrom重载了CopyFrom(const Message&)。如果类型不匹配只能在运行时发现抛异常。加一层这个接口是为了提到编译期
+ * @param dst 拷贝目标
+ * @param src 拷贝源
  */
-template <typename TPROTO>
-inline void protobuf_mini_dumper_copy(::google::protobuf::RepeatedPtrField<TPROTO> &dst, const ::google::protobuf::RepeatedPtrField<TPROTO> &src) {
-    dst.Reserve(src);
+template <typename TMsg>
+inline void protobuf_copy_message(TMsg &dst, const TMsg &src) {
     dst.CopyFrom(src);
 }
 
+template <typename TField>
+inline void protobuf_copy_message(::google::protobuf::RepeatedField<TField> &dst, const ::google::protobuf::RepeatedField<TField> &src) {
+    dst.Reserve(src.size());
+    dst.CopyFrom(src);
+}
 
 #endif //_UTILITY_PROTOBUF_MINI_DUMPER_H

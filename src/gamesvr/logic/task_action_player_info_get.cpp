@@ -58,7 +58,7 @@ int task_action_player_info_get::operator()() {
         // TODO update auto restore
 
         hello::DPlayerInfo *rsp_item = rsp_body->mutable_player_info();
-        protobuf_mini_dumper_copy(*rsp_item->mutable_player(), user->get_account_info().profile());
+        protobuf_copy_message(*rsp_item->mutable_player(), user->get_account_info().profile());
         rsp_item->set_player_level(user->get_player_level());
 
         // uint32_t player_level_func_bound = user->get_player_level();
@@ -89,7 +89,7 @@ int task_action_player_info_get::operator()() {
 
     // 自定义选项
     if (req_body.need_player_options()) {
-        protobuf_mini_dumper_copy(*rsp_body->mutable_player_options(), user->get_player_options().custom_options());
+        protobuf_copy_message(*rsp_body->mutable_player_options(), user->get_player_options().custom_options());
     }
 
     return hello::err::EN_SUCCESS;

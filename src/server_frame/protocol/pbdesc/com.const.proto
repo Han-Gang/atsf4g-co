@@ -1,6 +1,8 @@
 syntax = "proto3";
 // client and server will both use this
 
+import "extensions_error_code.proto";
+
 package hello;
 
 // limits
@@ -125,51 +127,90 @@ enum EnCloseReasonType {
 
 // error code
 enum EnErrorCode {
-    EN_SUCCESS               = 0;
-    EN_ERR_UNKNOWN           = -1;
-    EN_ERR_TIMEOUT           = -101; // 超时
-    EN_ERR_INVALID_PARAM     = -102; // 参数错误
-    EN_ERR_CANT_AFFORD       = -103; // 买不起
-    EN_ERR_NOT_LOGIN         = -104; // 没有登录
-    EN_ERR_NOT_GM            = -105; // 没有GM权限
-    EN_ERR_SYSTEM            = -106; // 服务器系统错误
-    EN_ERR_USER_NOT_FOUND    = -107; // 没有找到这个玩家
-    EN_ERR_REWARD_RECEIVED   = -108; // 这个奖励已经领取
-    EN_ERR_NOT_FOUND_UUID    = -109; // uuid没有找到
-    EN_ERR_MANUAL_DISCONNECT = -110; // 主动断开连接
-    EN_ERR_LOST_CONNECTION   = -111; // 丢失网络连接
-    EN_ERR_CONNECT_FAILED    = -112; // 无法连接到服务器
-    EN_ERR_MAINTENANCE       = -113; // 服务器正在维护
+    EN_SUCCESS     = 0 [ (error_code.description) = "成功" ];
+    EN_ERR_UNKNOWN = -1
+                     [(error_code.description) = "未知异常"];
+    EN_ERR_TIMEOUT = -101
+                     [(error_code.description) = "超时"];
+    EN_ERR_INVALID_PARAM = -102
+                           [(error_code.description) = "参数错误"];
+    EN_ERR_CANT_AFFORD = -103
+                         [(error_code.description) = "买不起"];
+    EN_ERR_NOT_LOGIN = -104
+                       [(error_code.description) = "没有登录"];
+    EN_ERR_NOT_GM = -105
+                    [(error_code.description) = "没有GM权限"];
+    EN_ERR_SYSTEM = -106
+                    [(error_code.description) = "服务器系统错误"];
+    EN_ERR_USER_NOT_FOUND = -107
+                            [(error_code.description) = "没有找到这个玩家"];
+    EN_ERR_REWARD_RECEIVED = -108
+                             [(error_code.description) = "这个奖励已经领取"];
+    EN_ERR_NOT_FOUND_UUID = -109
+                            [(error_code.description) = "uuid没有找到"];
+    EN_ERR_MANUAL_DISCONNECT = -110
+                               [(error_code.description) = "主动断开连接"];
+    EN_ERR_LOST_CONNECTION = -111
+                             [(error_code.description) = "丢失网络连接"];
+    EN_ERR_CONNECT_FAILED = -112
+                            [(error_code.description) = "无法连接到服务器"];
+    EN_ERR_MAINTENANCE = -113
+                         [(error_code.description) = "服务器正在维护"];
 
     // openapi
-    EN_ERR_OPENAPI_LIMIT          = -201; // openapi调用频率限制
-    EN_ERR_OPENAPI_CGI_FAIL       = -202; // openapi内部cgi错误
-    EN_ERR_OPENAPI_CALL_FAIL      = -203; // openapi内部调用错误
-    EN_ERR_OPENAPI_PARSE_FAIL     = -204; // openapi调用解析失败
-    EN_ERR_OPENAPI_PF_FAIL        = -205; // openapi调用pf无效
-    EN_ERR_OPENAPI_PAY_TOKEN_FAIL = -206; // openapi pay token 失效
-    EN_ERR_OPENAPI_PAY_MAINTAIN   = -207; // 支付服务器维护中，暂不可用
+    EN_ERR_OPENAPI_LIMIT = -201
+                           [(error_code.description) = "openapi调用频率限制"];
+    EN_ERR_OPENAPI_CGI_FAIL = -202
+                              [(error_code.description) = "openapi内部cgi错误"];
+    EN_ERR_OPENAPI_CALL_FAIL = -203
+                               [(error_code.description) = "openapi内部调用错误"];
+    EN_ERR_OPENAPI_PARSE_FAIL = -204
+                                [(error_code.description) = "openapi调用解析失败"];
+    EN_ERR_OPENAPI_PF_FAIL = -205
+                             [(error_code.description) = "openapi调用pf无效"];
+    EN_ERR_OPENAPI_PAY_TOKEN_FAIL = -206
+                                    [(error_code.description) = "openapi pay token 失效"];
+    EN_ERR_OPENAPI_PAY_MAINTAIN = -207
+                                  [(error_code.description) = "支付服务器维护中，暂不可用"];
 
-    EN_ERR_TEXT_HAS_DIRTY_WORD = -301; // 检测到脏字
+    EN_ERR_TEXT_HAS_DIRTY_WORD = -301
+                                 [(error_code.description) = "检测到脏字"];
 
     // 登录服务的返回错误码
-    EN_ERR_LOGIN_BAN                  = -401; // 账号被临时封停
-    EN_ERR_LOGIN_GM_LOCKED            = -402; // GM正在操作，请稍后再试
-    EN_ERR_LOGIN_VERSION              = -403; // 版本错误或需要更新
-    EN_ERR_LOGIN_PROTO_VERSION        = -404; // 协议版本错误
-    EN_ERR_LOGIN_VERIFY               = -405; // 校验不通过
-    EN_ERR_LOGIN_ALREADY_ONLINE       = -406; // 仍然在线且踢下线失败
-    EN_ERR_LOGIN_INVALID_PLAT         = -407; // 平台不受支持
-    EN_ERR_LOGIN_OTHER_DEVICE         = -408; // 在其他地方有登入
-    EN_ERR_LOGIN_NOT_LOGINED          = -409; // 未登录
-    EN_ERR_LOGIN_OPENID               = -410; // openid错误
-    EN_ERR_LOGIN_SERVER_PENDING       = -411; // 游戏暂未开放
-    EN_ERR_LOGIN_SPEED_WARNING        = -412; // 游戏速度异常，使用加速器会被封号一段时间
-    EN_ERR_LOGIN_OPENID_NOT_FOUND     = -413; // openid未找到
-    EN_ERR_LOGIN_DEVICEID_EMPTY       = -414; // device_id 为空
-    EN_ERR_LOGIN_OPENID_NOT_MATCH     = -415; // 上传上来的openid不匹配
-    EN_ERR_LOGIN_CREATE_PLAYER_FAILED = -416; // 创建用户失败
-    EN_ERR_LOGIN_USERID_NOT_MATCH     = -417; // 用户ID不匹配
+    EN_ERR_LOGIN_BAN = -401
+                       [(error_code.description) = "账号被临时封停"];
+    EN_ERR_LOGIN_GM_LOCKED = -402
+                             [(error_code.description) = "GM正在操作，请稍后再试"];
+    EN_ERR_LOGIN_VERSION = -403
+                           [(error_code.description) = "版本错误或需要更新"];
+    EN_ERR_LOGIN_PROTO_VERSION = -404
+                                 [(error_code.description) = "协议版本错误"];
+    EN_ERR_LOGIN_VERIFY = -405
+                          [(error_code.description) = "校验不通过"];
+    EN_ERR_LOGIN_ALREADY_ONLINE = -406
+                                  [(error_code.description) = "仍然在线且踢下线失败"];
+    EN_ERR_LOGIN_INVALID_PLAT = -407
+                                [(error_code.description) = "平台不受支持"];
+    EN_ERR_LOGIN_OTHER_DEVICE = -408
+                                [(error_code.description) = "在其他地方有登入"];
+    EN_ERR_LOGIN_NOT_LOGINED = -409
+                               [(error_code.description) = "未登录"];
+    EN_ERR_LOGIN_OPENID = -410
+                          [(error_code.description) = "openid错误"];
+    EN_ERR_LOGIN_SERVER_PENDING = -411
+                                  [(error_code.description) = "游戏暂未开放"];
+    EN_ERR_LOGIN_SPEED_WARNING = -412
+                                 [(error_code.description) = "游戏速度异常，使用加速器会被封号一段时间"];
+    EN_ERR_LOGIN_OPENID_NOT_FOUND = -413
+                                    [(error_code.description) = "openid未找到"];
+    EN_ERR_LOGIN_DEVICEID_EMPTY = -414
+                                  [(error_code.description) = "device_id 为空"];
+    EN_ERR_LOGIN_OPENID_NOT_MATCH = -415
+                                    [(error_code.description) = "上传上来的openid不匹配"];
+    EN_ERR_LOGIN_CREATE_PLAYER_FAILED = -416
+                                        [(error_code.description) = "创建用户失败"];
+    EN_ERR_LOGIN_USERID_NOT_MATCH = -417
+                                    [(error_code.description) = "用户ID不匹配"];
 
-    // 注意错误码不能小于 -99999，便于区分服务器错误码和客户端错误码
+    // 注意错误码不能小于 -999999，便于区分服务器错误码和客户端错误码
 }

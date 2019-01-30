@@ -47,7 +47,7 @@ void player::create_init(uint32_t version_type) {
     version_.assign("0");
 
     // copy account information
-    protobuf_mini_dumper_copy(get_account_info(), get_login_info().account());
+    protobuf_copy_message(get_account_info(), get_login_info().account());
 
     // TODO all module create init
     // TODO init all interval checkpoint
@@ -125,22 +125,22 @@ void player::init_from_table_data(const hello::table_user &tb_player) {
     // hello::table_user tb_patch;
     const hello::table_user *src_tb = &tb_player;
     // if (data_version_ < PLAYER_DATA_LOGIC_VERSION) {
-    //     protobuf_mini_dumper_copy(tb_patch, tb_player);
+    //     protobuf_copy_message(tb_patch, tb_player);
     //     src_tb = &tb_patch;
     //     //GameUserPatchMgr::Instance()->Patch(tb_patch, m_iDataVersion, GAME_USER_DATA_LOGIC);
     //     data_version_ = PLAYER_DATA_LOGIC_VERSION;
     // }
 
     if (src_tb->has_account()) {
-        protobuf_mini_dumper_copy(account_info_.ref(), src_tb->account());
+        protobuf_copy_message(account_info_.ref(), src_tb->account());
     }
 
     if (src_tb->has_player()) {
-        protobuf_mini_dumper_copy(player_data_.ref(), src_tb->player());
+        protobuf_copy_message(player_data_.ref(), src_tb->player());
     }
 
     if (src_tb->has_options()) {
-        protobuf_mini_dumper_copy(player_options_.ref(), src_tb->options());
+        protobuf_copy_message(player_options_.ref(), src_tb->options());
     }
 
     // TODO all modules load from DB
@@ -152,15 +152,15 @@ int player::dump(hello::table_user &user, bool always) {
     user.set_data_version(data_version_);
 
     if (always || player_data_.is_dirty()) {
-        protobuf_mini_dumper_copy(*user.mutable_player(), player_data_.ref());
+        protobuf_copy_message(*user.mutable_player(), player_data_.ref());
     }
 
     if (always || account_info_.is_dirty()) {
-        protobuf_mini_dumper_copy(*user.mutable_account(), account_info_.ref());
+        protobuf_copy_message(*user.mutable_account(), account_info_.ref());
     }
 
     if (always || player_options_.is_dirty()) {
-        protobuf_mini_dumper_copy(*user.mutable_options(), player_options_.ref());
+        protobuf_copy_message(*user.mutable_options(), player_options_.ref());
     }
 
     return 0;

@@ -107,7 +107,7 @@ int router_player_cache::pull_object(router_player_private_type &priv_data) {
             // 创建用户走这里的流程
             tbu.set_open_id(priv_data.login_tb->open_id());
             tbu.set_user_id(priv_data.login_tb->user_id());
-            protobuf_mini_dumper_copy(*tbu.mutable_account(), priv_data.login_tb->account());
+            protobuf_copy_message(*tbu.mutable_account(), priv_data.login_tb->account());
             res = 0;
         } else {
             return res;

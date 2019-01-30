@@ -52,7 +52,7 @@ namespace proto {
                 sender.player->set_gamesvr_index(params[4]->to_int32());
             }
 
-            protobuf_mini_dumper_copy(*req_body->mutable_account(), sender.player->get_account());
+            protobuf_copy_message(*req_body->mutable_account(), sender.player->get_account());
             req_body->set_platform_type(sender.player->get_platform_type());
         }
 
@@ -130,7 +130,7 @@ namespace proto {
             req_body->set_login_code(sender.player->get_login_code());
             req_body->set_open_id(sender.player->get_id());
             req_body->set_user_id(sender.player->get_user_id());
-            protobuf_mini_dumper_copy(*req_body->mutable_account(), sender.player->get_account());
+            protobuf_copy_message(*req_body->mutable_account(), sender.player->get_account());
         }
 
         void on_rsp_login(client_simulator::player_ptr_t player, client_simulator::msg_t &msg) {

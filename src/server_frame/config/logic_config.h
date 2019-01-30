@@ -17,7 +17,7 @@ public:
     struct LC_DBCONN {
         std::string url;
         std::string host;
-        uint16_t port;
+        uint16_t    port;
     };
 
     struct LC_DBCONF {
@@ -44,16 +44,16 @@ public:
         uint32_t zone_id;
         uint32_t zone_step;
 
-        time_t server_open_time;
+        time_t      server_open_time;
         std::string server_resource_dir; // ../../resource for default
-        bool server_maintenance_mode;
+        bool        server_maintenance_mode;
 
         time_t task_nomsg_timeout;
         time_t task_csmsg_timeout;
         time_t task_paymsg_timeout;
         size_t task_stack_size;
 
-        size_t player_max_online_number;
+        size_t      player_max_online_number;
         std::string player_default_openid;
 
         // 登入码的有效期
@@ -75,20 +75,20 @@ public:
 
     // ================== server configures =====================
     struct LC_LOGINSVR {
-        time_t gmsvr_timeout_sec;
+        time_t      gmsvr_timeout_sec;
         std::string version_cfg_file;
         std::string strategy_cfg_file;
         std::string cdn_url;
 
         std::vector<std::string> gamesvr_list;
-        time_t start_time;
-        time_t end_time;
+        time_t                   start_time;
+        time_t                   end_time;
 
         time_t relogin_expired_time;
 
         std::vector<std::string> white_openid_list;
-        uint32_t debug_platform_mode;
-        uint32_t reload_version;
+        uint32_t                 debug_platform_mode;
+        uint32_t                 reload_version;
     };
 
     struct LC_GAMESVR {};
@@ -108,7 +108,7 @@ public:
     inline const LC_DBCONF &get_cfg_db() const { return cfg_db_; }
 
     inline const LC_LOGINSVR &get_cfg_svr_login() const { return cfg_loginsvr_; }
-    inline const LC_GAMESVR &get_cfg_svr_game() const { return cfg_gamesvr_; }
+    inline const LC_GAMESVR & get_cfg_svr_game() const { return cfg_gamesvr_; }
 
 private:
     void _load_logic(util::config::ini_loader &loader);
@@ -125,7 +125,7 @@ private:
     LC_DBCONF cfg_db_;
 
     LC_LOGINSVR cfg_loginsvr_;
-    LC_GAMESVR cfg_gamesvr_;
+    LC_GAMESVR  cfg_gamesvr_;
 };
 
 

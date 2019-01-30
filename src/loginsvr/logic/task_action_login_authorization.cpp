@@ -61,7 +61,7 @@ int task_action_login_authorization::operator()() {
 
     const ::hello::CSLoginAuthReq &msg_body_raw = req.body().mcs_login_auth_req();
     ::hello::CSLoginAuthReq        msg_body;
-    protobuf_mini_dumper_copy(msg_body, msg_body_raw);
+    protobuf_copy_message(msg_body, msg_body_raw);
 
     // 2. 版本号及更新逻辑
     uint32_t account_type = msg_body.account().account_type();

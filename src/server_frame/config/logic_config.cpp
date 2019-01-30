@@ -72,34 +72,34 @@ void logic_config::_load_logic(util::config::ini_loader &loader) {
 
     // player
     cfg_logic_.player_max_online_number = 10000;
-    cfg_logic_.player_default_openid = "gm://system";
+    cfg_logic_.player_default_openid    = "gm://system";
 
     loader.dump_to("logic.player.max_online", cfg_logic_.player_max_online_number);
     loader.dump_to("logic.player.default_openid", cfg_logic_.player_default_openid);
 
-    cfg_logic_.session_login_code_protect = 1200;  // 20m for expired of bad token protect
-    cfg_logic_.session_login_code_valid_sec = 600; // 10m for expired of token
-    cfg_logic_.session_login_ban_time = 10800;     // 3 hours when ban by anti cheating
-    cfg_logic_.session_tick_sec = 60;              // session event tick interval(for example: online number)
+    cfg_logic_.session_login_code_protect   = 1200;  // 20m for expired of bad token protect
+    cfg_logic_.session_login_code_valid_sec = 600;   // 10m for expired of token
+    cfg_logic_.session_login_ban_time       = 10800; // 3 hours when ban by anti cheating
+    cfg_logic_.session_tick_sec             = 60;    // session event tick interval(for example: online number)
     loader.dump_to("logic.session.login_code_protect", cfg_logic_.session_login_code_protect);
     loader.dump_to("logic.session.login_code_valid_sec", cfg_logic_.session_login_code_valid_sec);
     loader.dump_to("logic.session.login_ban_time", cfg_logic_.session_login_ban_time);
     loader.dump_to("logic.session.tick_sec", cfg_logic_.session_tick_sec);
 
-    cfg_logic_.task_stack_size = 1024 * 1024; // 默认1MB
-    cfg_logic_.task_csmsg_timeout = 5;        // 5s
-    cfg_logic_.task_nomsg_timeout = 1800;     // 1800s for auto task
-    cfg_logic_.task_paymsg_timeout = 300;     // 300s for pay task
+    cfg_logic_.task_stack_size     = 1024 * 1024; // 默认1MB
+    cfg_logic_.task_csmsg_timeout  = 5;           // 5s
+    cfg_logic_.task_nomsg_timeout  = 1800;        // 1800s for auto task
+    cfg_logic_.task_paymsg_timeout = 300;         // 300s for pay task
     loader.dump_to("logic.task.stack.size", cfg_logic_.task_stack_size);
     loader.dump_to("logic.task.csmsg.timeout", cfg_logic_.task_csmsg_timeout);
     loader.dump_to("logic.task.nomsg.timeout", cfg_logic_.task_nomsg_timeout);
     loader.dump_to("logic.task.paymsg.timeout", cfg_logic_.task_paymsg_timeout);
 
-    cfg_logic_.heartbeat_interval = 120;         // 120s for every ping/pong
-    cfg_logic_.heartbeat_tolerance = 20;         // 20s for network latency tolerance
-    cfg_logic_.heartbeat_error_times = 4;        // how much times of continue error will cause a kickoff
-    cfg_logic_.heartbeat_ban_error_times = 3;    // how much times of continue kickoff will ban account
-    cfg_logic_.heartbeat_ban_time_bound = 10800; // 3 hours of ban time
+    cfg_logic_.heartbeat_interval        = 120;   // 120s for every ping/pong
+    cfg_logic_.heartbeat_tolerance       = 20;    // 20s for network latency tolerance
+    cfg_logic_.heartbeat_error_times     = 4;     // how much times of continue error will cause a kickoff
+    cfg_logic_.heartbeat_ban_error_times = 3;     // how much times of continue kickoff will ban account
+    cfg_logic_.heartbeat_ban_time_bound  = 10800; // 3 hours of ban time
     loader.dump_to("logic.heartbeat.interval", cfg_logic_.heartbeat_interval);
     loader.dump_to("logic.heartbeat.tolerance", cfg_logic_.heartbeat_tolerance);
     loader.dump_to("logic.heartbeat.error_times", cfg_logic_.heartbeat_error_times);
@@ -144,13 +144,13 @@ void logic_config::_load_db(util::config::ini_loader &loader) {
 void logic_config::_load_db_hosts(std::vector<LC_DBCONN> &out, const char *group_name, util::config::ini_loader &loader) {
     std::stringstream ss;
     ss << "db." << group_name << ".host";
-    std::string path = ss.str();
+    std::string              path = ss.str();
     std::vector<std::string> urls;
     loader.dump_to(path, urls);
 
     owent_foreach(std::string & url, urls) {
         LC_DBCONN db_conn;
-        db_conn.url = url;
+        db_conn.url               = url;
         std::string::size_type fn = db_conn.url.find_last_of(":");
         if (std::string::npos == fn) {
             db_conn.host = url;
@@ -184,9 +184,9 @@ void logic_config::_load_db_hosts(std::vector<LC_DBCONN> &out, const char *group
 }
 
 void logic_config::_load_loginsvr(util::config::ini_loader &loader) {
-    cfg_loginsvr_.version_cfg_file = "../cfg/cfg_version.xml";
+    cfg_loginsvr_.version_cfg_file  = "../cfg/cfg_version.xml";
     cfg_loginsvr_.strategy_cfg_file = "../cfg/cfg_strategy.xml";
-    cfg_loginsvr_.reload_version = static_cast<uint32_t>(util::time::time_utility::get_now());
+    cfg_loginsvr_.reload_version    = static_cast<uint32_t>(util::time::time_utility::get_now());
 
     loader.dump_to("loginsvr.gmsvr.timeout.sec", cfg_loginsvr_.gmsvr_timeout_sec);
     loader.dump_to("loginsvr.version_conf", cfg_loginsvr_.version_cfg_file, false);

@@ -103,7 +103,7 @@ namespace detail {
                 val.add(params[0]->to_cpp_string());
 
                 util::config::duration_value dur = val.as_duration();
-                msec = dur.sec * 1000 + dur.nsec / 1000000;
+                msec                             = dur.sec * 1000 + dur.nsec / 1000000;
             }
 
             if (msec > 0) {
@@ -132,7 +132,7 @@ namespace detail {
         void operator()(util::cli::callback_param params) {
             util::cli::shell_stream(std::cout)() << util::cli::shell_font_style::SHELL_FONT_COLOR_RED << "Cmd Error." << std::endl;
             const typename util::cli::cmd_option_list::cmd_array_type &cmd_arr = params.get_cmd_array();
-            size_t arr_sz = cmd_arr.size();
+            size_t                                                     arr_sz  = cmd_arr.size();
             if (arr_sz < 2) {
                 owner->dump(std::cout, "") << std::endl;
                 return;
@@ -174,7 +174,7 @@ simulator_base::cmd_wrapper_t &simulator_base::cmd_wrapper_t::operator[](const s
     }
 
     if (!child) {
-        child = std::make_shared<cmd_wrapper_t>(nm);
+        child           = std::make_shared<cmd_wrapper_t>(nm);
         child->cmd_node = util::cli::cmd_option_ci::create();
         assert(child->cmd_node->empty());
         child->parent = this;
@@ -222,19 +222,19 @@ simulator_base::simulator_base() : is_closing_(false), exec_path_(NULL) {
     uv_mutex_init(&async_cmd_lock_);
     async_cmd_.data = this;
 
-    cmd_mgr_ = util::cli::cmd_option_ci::create();
-    args_mgr_ = util::cli::cmd_option::create();
-    root_ = std::make_shared<cmd_wrapper_t>(std::string());
+    cmd_mgr_        = util::cli::cmd_option_ci::create();
+    args_mgr_       = util::cli::cmd_option::create();
+    root_           = std::make_shared<cmd_wrapper_t>(std::string());
     root_->cmd_node = cmd_mgr_;
 
-    shell_opts_.history_file = ".simulator_history";
-    shell_opts_.protocol_log = "protocol.log";
+    shell_opts_.history_file   = ".simulator_history";
+    shell_opts_.protocol_log   = "protocol.log";
     shell_opts_.no_interactive = false;
     shell_opts_.buffer_.resize(65536);
     shell_opts_.tick_timer_interval = 200; // 200 ms for default
 
-    signals_.is_used = false;
-    tick_timer_.is_used = false;
+    signals_.is_used     = false;
+    tick_timer_.is_used  = false;
     sleep_timer_.is_used = false;
 
     g_last_simulator = this;
@@ -306,7 +306,7 @@ void simulator_base::setup_signal() {
     uv_signal_init(&loop_, &signals_.sigint);
     uv_signal_init(&loop_, &signals_.sigquit);
     uv_signal_init(&loop_, &signals_.sigterm);
-    signals_.sigint.data = this;
+    signals_.sigint.data  = this;
     signals_.sigquit.data = this;
     signals_.sigterm.data = this;
 
@@ -625,7 +625,7 @@ char *simulator_base::linenoise_hint(const char *buf, int *color, int *bold) {
 
     if (!res.hint.empty()) {
         *color = 33;
-        *bold = 1;
+        *bold  = 1;
         return &res.hint[0];
     }
 
@@ -651,10 +651,10 @@ simulator_base::linenoise_helper_t &simulator_base::linenoise_build_complete(con
     std::stringstream ss;
     ss.str(line);
 
-    cmd_wrapper_t *parent = &g_last_simulator->reg_req();
-    const char *last_matched = line;
-    const char *curr_matched = line;
-    std::string ident;
+    cmd_wrapper_t *parent       = &g_last_simulator->reg_req();
+    const char *   last_matched = line;
+    const char *   curr_matched = line;
+    std::string    ident;
     while (curr_matched && *curr_matched) {
         curr_matched = util::cli::cmd_option_ci::get_segment(curr_matched, ident);
         if (ident.empty()) {
@@ -666,7 +666,7 @@ simulator_base::linenoise_helper_t &simulator_base::linenoise_build_complete(con
             break;
         }
 
-        parent = iter->second.get();
+        parent       = iter->second.get();
         last_matched = curr_matched;
         ident.clear();
     }
@@ -674,7 +674,7 @@ simulator_base::linenoise_helper_t &simulator_base::linenoise_build_complete(con
     // 查找不完整词
     if (ident.size() > 0) {
         cmd_wrapper_t::value_type::iterator iter = parent->children.lower_bound(ident.c_str());
-        std::string rule;
+        std::string                         rule;
 
         for (; iter != parent->children.end(); ++iter) {
             if (iter->first.size() < ident.size()) {
@@ -710,12 +710,12 @@ simulator_base::linenoise_helper_t &simulator_base::linenoise_build_complete(con
         // file system complete
         if (complete && ret.complete.empty() && parent->autocomplete_.test(cmd_autocomplete_flag_t::EN_CACF_FILES)) {
             std::list<std::string> fls;
-            std::string prefix, dir, next_ident;
+            std::string            prefix, dir, next_ident;
             while (curr_matched && *curr_matched) {
                 const char *prev_matched = curr_matched;
-                curr_matched = util::cli::cmd_option_ci::get_segment(curr_matched, next_ident);
+                curr_matched             = util::cli::cmd_option_ci::get_segment(curr_matched, next_ident);
                 if (!next_ident.empty()) {
-                    ident = next_ident;
+                    ident        = next_ident;
                     last_matched = prev_matched;
                 }
             }
@@ -746,7 +746,7 @@ simulator_base::linenoise_helper_t &simulator_base::linenoise_build_complete(con
     } else {
         // 子命令
         if (complete) {
-            std::string rule;
+            std::string                         rule;
             cmd_wrapper_t::value_type::iterator iter = parent->children.begin();
             for (; iter != parent->children.end(); ++iter) {
                 rule.reserve(last_matched - line + 1 + iter->first.size());
@@ -815,9 +815,9 @@ void simulator_base::linenoise_thd_main(void *arg) {
     }
 
     // readline loop
-    std::string prompt = "~>";
-    char *cmd_c = NULL;
-    bool is_continue = true;
+    std::string prompt      = "~>";
+    char *      cmd_c       = NULL;
+    bool        is_continue = true;
     while (is_continue && NULL != g_last_simulator && !g_last_simulator->is_closing()) {
         // reset errno, or ctrl+c will loop
         errno = 0;
