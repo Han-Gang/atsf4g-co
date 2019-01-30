@@ -1,10 +1,14 @@
-#!/bin/sh
+#!/bin/bash
+
+SCRIPT_DIR="$(cd $(dirname $0) && pwd)";
 
 if [ -z "$REDIS_PREFIX_DIR" ]; then
-    export REDIS_PREFIX_DIR="../..";
+    export REDIS_PREFIX_DIR="$(cd $SCRIPT_DIR/.. && pwd)";
+else
+    export REDIS_PREFIX_DIR="$(cd $REDIS_PREFIX_DIR && pwd)";
 fi
 
-cd "$(dirname "$0")";
+cd "$SCRIPT_DIR";
 
 mkdir -p ../data;
 mkdir -p ../log;

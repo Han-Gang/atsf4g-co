@@ -26,4 +26,4 @@ for (( i = $START_ID; i <= $END_ID ; ++ i )); do
     REDIS_NODE="$REDIS_NODE 127.0.0.1:$port";
 done
 
-./redis-trib.rb create --replicas $REPLICAS $REDIS_NODE;
+../bin/redis-cli --cluster create $REDIS_NODE --cluster-replicas $REPLICAS;
