@@ -19,7 +19,10 @@ export LD_LIBRARY_PATH=$PROJECT_INSTALL_DIR/lib:$PROJECT_INSTALL_DIR/tools/share
 % for svr_index in project.get_service_index_range(int(project.get_global_option('server.loginsvr', 'number', 0))):
   <%
     connect_port = project.get_server_gateway_port('loginsvr', svr_index, 'atgateway')
-    if project.is_ip_v6_enabled():
+    hostname, is_uuid = project.get_hostname()
+    if hostname and not is_uuid:
+      connect_ip = hostname
+    elif project.is_ip_v6_enabled():
       connect_ip = '::1'
     else:
       connect_ip = '127.0.0.1'
