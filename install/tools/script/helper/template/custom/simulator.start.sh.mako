@@ -15,21 +15,23 @@ else
 fi
 
 export LD_LIBRARY_PATH=$PROJECT_INSTALL_DIR/lib:$PROJECT_INSTALL_DIR/tools/shared:$LD_LIBRARY_PATH ;
-<% is_first_addr = False %>
-% for svr_index in project.get_service_index_range(int(project.get_global_option('server.tconnd_cluster', 'number', 0))):
-  <% 
-  client_url = project.get_tsf4g_tconnd_cluster_client_url(svr_index)[6:]
-  ip_split = client_url.rfind(':')
-  connect_ip = client_url[0:ip_split]
-  connect_port = client_url[ip_split + 1:]
-  %>
+<% is_first_addr = True %>
+% for svr_index in project.get_service_index_range(int(project.get_global_option('server.loginsvr', 'number', 0))):
+  <%
+    connect_port = project.get_server_gateway_port('loginsvr', svr_index, 'atgateway')
+    if project.is_ip_v6_enabled():
+      connect_ip = '::1'
+    else:
+      connect_ip = '127.0.0.1'
+    %>
   % if is_first_addr:
-# $SIMULATOR_BIN_NAME --host ${connect_ip} --port ${connect_port} --tgcpapi-zone-id ${project.get_global_option('global', 'zone_id', 0)} "$@";
+$SIMULATOR_BIN_NAME --host ${connect_ip} --port ${connect_port} "$@";
+    <% is_first_addr = False %>
   % else:
-$SIMULATOR_BIN_NAME --host ${connect_ip} --port ${connect_port} --tgcpapi-zone-id ${project.get_global_option('global', 'zone_id', 0)} "$@";
-  <% is_first_addr = True %>
+# $SIMULATOR_BIN_NAME --host ${connect_ip} --port ${connect_port} "$@";
   % endif
 % endfor
-% if not is_first_addr:
-$SIMULATOR_BIN_NAME --tgcpapi-zone-id ${project.get_global_option('global', 'zone_id', 0)} "$@";
+
+% if is_first_addr:
+$SIMULATOR_BIN_NAME "$@";
 % endif
