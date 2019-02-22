@@ -10,6 +10,8 @@
 
 #include <config/logic_config.h>
 
+#include <libatbus_protocol.h>
+
 #include "../router_manager_base.h"
 #include "../router_manager_set.h"
 
@@ -28,13 +30,13 @@ int task_action_router_transfer::operator()() {
 
     add_rsp_msg().mutable_body()->mutable_mss_router_transfer_rsp();
     const hello::SSRouterTransferReq &req_body = req_msg.body().mss_router_transfer_req();
-    router_manager_base *mgr = router_manager_set::me()->get_manager(req_body.object().object_type_id());
+    router_manager_base *             mgr      = router_manager_set::me()->get_manager(req_body.object().object_type_id());
     if (NULL == mgr) {
         WLOGERROR("router manager %u invalid", req_body.object().object_type_id());
         return hello::err::EN_SUCCESS;
     }
 
-    router_manager_base::key_t key(req_body.object().object_type_id(), req_body.object().object_inst_id());
+    router_manager_base::key_t          key(req_body.object().object_type_id(), req_body.object().object_inst_id());
     std::shared_ptr<router_object_base> obj = mgr->get_base_cache(key);
 
     // 如果本地版本号更高就不用远程拉取了

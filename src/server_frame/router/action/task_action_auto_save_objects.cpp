@@ -8,6 +8,8 @@
 
 #include <config/logic_config.h>
 
+#include <libatbus_protocol.h>
+
 #include "../router_manager_base.h"
 #include "../router_manager_set.h"
 #include "../router_object_base.h"

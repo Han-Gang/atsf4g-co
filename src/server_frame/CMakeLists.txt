@@ -33,13 +33,6 @@ if ( NOT MSVC AND NOT APPLE )
     add_definitions(-shared)
 endif()
 
-find_package(Libuuid)
-if(NOT Libuuid_FOUND)
-    EchoWithColor(COLOR YELLOW "-- Dependency: libuuid not found")
-    message(FATAL_ERROR "libuuid-devel or uuid-dev is required")
-    set(Libuuid_LIBRARIES "")
-endif()
-
 # these service will use atgateway protocol
 include_directories(${ATFRAMEWORK_SERVICE_GATEWAY_PROTOCOL_DIR})
 

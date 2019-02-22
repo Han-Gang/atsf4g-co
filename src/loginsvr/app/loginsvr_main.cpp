@@ -11,6 +11,7 @@
 #include <time/time_utility.h>
 
 #include <atframe/atapp.h>
+#include <libatbus_protocol.h>
 
 #include <config/atframe_service_types.h>
 #include <config/extern_service_types.h>
@@ -156,7 +157,7 @@ public:
 
     virtual int reload() {
         WLOGINFO("============ server reload ============");
-        int ret = 0;
+        int                       ret = 0;
         util::config::ini_loader &cfg = get_app()->get_configure();
 
         RELOAD_CALL(ret, logic_config, cfg);

@@ -27,9 +27,9 @@
 
 class dispatcher_implement : public ::atapp::module_impl {
 public:
-    typedef dispatcher_msg_raw_t msg_raw_t;
+    typedef dispatcher_msg_raw_t     msg_raw_t;
     typedef dispatcher_resume_data_t resume_data_t;
-    typedef dispatcher_start_data_t start_data_t;
+    typedef dispatcher_start_data_t  start_data_t;
 
     typedef uint32_t msg_type_t;
     typedef UTIL_ENV_AUTO_MAP(msg_type_t, task_manager::task_action_creator_t) msg_task_action_set_t;
@@ -161,10 +161,10 @@ private:
     int _register_action(msg_type_t msg_type, task_manager::actor_action_creator_t action);
 
 private:
-    msg_task_action_set_t task_action_name_map_;
-    msg_actor_action_set_t actor_action_name_map_;
+    msg_task_action_set_t          task_action_name_map_;
+    msg_actor_action_set_t         actor_action_name_map_;
     std::list<msg_filter_handle_t> msg_filter_list_;
-    mutable std::string human_readable_name_;
+    mutable std::string            human_readable_name_;
 };
 
 
@@ -186,7 +186,7 @@ int32_t dispatcher_implement::unpack_protobuf_msg(TMsg &real_msg, msg_raw_t &raw
     raw_msg.msg_addr = &real_msg;
 
     if (NULL != WDTLOGGETCAT(util::log::log_wrapper::categorize_t::DEFAULT) &&
-        WDTLOGGETCAT(util::log::log_wrapper::categorize_t::DEFAULT)->check(util::log::log_wrapper::level_t::LOG_LW_DEBUG)) {
+        WDTLOGGETCAT(util::log::log_wrapper::categorize_t::DEFAULT)->check_level(util::log::log_wrapper::level_t::LOG_LW_DEBUG)) {
         WLOGDEBUG("dispatcher %s(type=0x%llx) recv msg.\n%s", name(), get_instance_ident_llu(), protobuf_mini_dumper_get_readable(real_msg));
     }
 

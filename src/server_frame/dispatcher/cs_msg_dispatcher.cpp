@@ -10,6 +10,7 @@
 
 #include <atframe/atapp.h>
 #include <config/atframe_service_types.h>
+#include <libatbus_protocol.h>
 #include <libatgw_server_protocol.h>
 #include <proto_base.h>
 
@@ -55,7 +56,7 @@ int32_t cs_msg_dispatcher::dispatch(const atbus::protocol::msg &msg, const void 
     }
 
     ::atframe::gw::ss_msg req_msg;
-    msgpack::unpacked result;
+    msgpack::unpacked     result;
     msgpack::unpack(result, reinterpret_cast<const char *>(buffer), len);
     msgpack::object obj = result.get();
     if (obj.is_nil()) {
@@ -66,9 +67,9 @@ int32_t cs_msg_dispatcher::dispatch(const atbus::protocol::msg &msg, const void 
     int ret = hello::err::EN_SUCCESS;
     switch (req_msg.head.cmd) {
     case ATFRAME_GW_CMD_POST: {
-        hello::CSMsg cs_msg;
+        hello::CSMsg   cs_msg;
         session::key_t session_key;
-        session_key.bus_id = msg.body.forward->from;
+        session_key.bus_id     = msg.body.forward->from;
         session_key.session_id = req_msg.head.session_id;
 
         if (!session_manager::me()->find(session_key)) {
@@ -82,7 +83,7 @@ int32_t cs_msg_dispatcher::dispatch(const atbus::protocol::msg &msg, const void 
 
         start_data_t start_data;
         start_data.private_data = NULL;
-        ret = unpack_protobuf_msg(cs_msg, start_data.message, req_msg.body.post->content.ptr, req_msg.body.post->content.size);
+        ret                     = unpack_protobuf_msg(cs_msg, start_data.message, req_msg.body.post->content.ptr, req_msg.body.post->content.size);
         if (ret != 0) {
             WLOGERROR("%s unpack received message from 0x%llx, session id:0x%llx failed, res: %d", name(), static_cast<unsigned long long>(session_key.bus_id),
                       static_cast<unsigned long long>(session_key.session_id), ret);
@@ -101,7 +102,7 @@ int32_t cs_msg_dispatcher::dispatch(const atbus::protocol::msg &msg, const void 
     }
     case ATFRAME_GW_CMD_SESSION_ADD: {
         session::key_t session_key;
-        session_key.bus_id = msg.body.forward->from;
+        session_key.bus_id     = msg.body.forward->from;
         session_key.session_id = req_msg.head.session_id;
 
         WLOGINFO("create new session [0x%llx, 0x%llx], address: %s:%d", static_cast<unsigned long long>(session_key.bus_id),
@@ -119,22 +120,22 @@ int32_t cs_msg_dispatcher::dispatch(const atbus::protocol::msg &msg, const void 
     }
     case ATFRAME_GW_CMD_SESSION_REMOVE: {
         session::key_t session_key;
-        session_key.bus_id = msg.body.forward->from;
+        session_key.bus_id     = msg.body.forward->from;
         session_key.session_id = req_msg.head.session_id;
 
         WLOGINFO("remove session [0x%llx, 0x%llx]", static_cast<unsigned long long>(session_key.bus_id),
                  static_cast<unsigned long long>(session_key.session_id));
 
         // logout task
-        task_manager::id_t logout_task_id = 0;
+        task_manager::id_t                      logout_task_id = 0;
         task_action_player_logout::ctor_param_t task_param;
         task_param.atgateway_session_id = session_key.session_id;
-        task_param.atgateway_bus_id = session_key.bus_id;
+        task_param.atgateway_bus_id     = session_key.bus_id;
 
         ret = task_manager::me()->create_task<task_action_player_logout>(logout_task_id, COPP_MACRO_STD_MOVE(task_param));
         if (0 == ret) {
             start_data_t start_data;
-            start_data.private_data = NULL;
+            start_data.private_data     = NULL;
             start_data.message.msg_type = 0;
             start_data.message.msg_addr = NULL;
 

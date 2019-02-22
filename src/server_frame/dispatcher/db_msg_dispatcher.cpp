@@ -30,7 +30,7 @@ struct db_async_data_t {
     uint64_t task_id;
     uint64_t bus_id;
 
-    redisReply *response;
+    redisReply *                   response;
     db_msg_dispatcher::unpack_fn_t unpack_fn;
 };
 
@@ -93,7 +93,7 @@ int32_t db_msg_dispatcher::init() {
 
 int db_msg_dispatcher::tick() {
     tick_msg_count_ = 0;
-    int prev_count = -1;
+    int prev_count  = -1;
 
     // no more than 64 messages in one tick
     while (prev_count != tick_msg_count_ && prev_count < 64) {
@@ -164,7 +164,7 @@ int32_t db_msg_dispatcher::dispatch(const void *msg_buf, size_t msg_buf_sz) {
     msg_raw_t msg;
     msg.msg_addr = &table_msg;
     msg.msg_type = get_instance_ident();
-    ret = on_recv_msg(msg, req->response);
+    ret          = on_recv_msg(msg, req->response);
     return ret;
 }
 
@@ -244,8 +244,8 @@ void db_msg_dispatcher::log_info_fn(const char *content) { WCLOGINFO(log_categor
 
 int db_msg_dispatcher::script_load(redisAsyncContext *c, uint32_t type) {
     // load lua script
-    int status;
-    std::string script;
+    int                status;
+    std::string        script;
     const std::string &script_file_path = logic_config::me()->get_cfg_db().db_script_file[type % hello::EnDBScriptShaType_ARRAYSIZE];
     if (script_file_path.empty()) {
         return 0;
@@ -275,7 +275,7 @@ int db_msg_dispatcher::open_file(const char *file, std::string &script) {
 }
 
 void db_msg_dispatcher::on_timer_proc(uv_timer_t *handle) {
-    time_t sec = util::time::time_utility::get_now();
+    time_t sec  = util::time::time_utility::get_now();
     time_t usec = util::time::time_utility::get_now_usec();
 
     db_msg_dispatcher *dispatcher = reinterpret_cast<db_msg_dispatcher *>(handle->data);
@@ -328,7 +328,7 @@ int db_msg_dispatcher::cluster_init(const std::vector<logic_config::LC_DBCONN> &
         return hello::err::EN_SUCCESS;
     }
 
-    conn = std::make_shared<hiredis::happ::cluster>();
+    conn            = std::make_shared<hiredis::happ::cluster>();
     size_t conn_idx = util::random_engine::random_between<size_t>(0, conns.size());
 
     // 初始化
@@ -336,15 +336,15 @@ int db_msg_dispatcher::cluster_init(const std::vector<logic_config::LC_DBCONN> &
 
     // 设置日志handle
     {
-        hiredis::happ::cluster::log_fn_t info_fn = db_msg_dispatcher::log_info_fn;
+        hiredis::happ::cluster::log_fn_t info_fn  = db_msg_dispatcher::log_info_fn;
         hiredis::happ::cluster::log_fn_t debug_fn = db_msg_dispatcher::log_debug_fn;
 
         util::log::log_wrapper *wrapper = WLOG_GETCAT(log_categorize_t::DB);
-        if (!wrapper->check(util::log::log_wrapper::level_t::LOG_LW_DEBUG)) {
+        if (!wrapper->check_level(util::log::log_wrapper::level_t::LOG_LW_DEBUG)) {
             debug_fn = NULL;
         }
 
-        if (!wrapper->check(util::log::log_wrapper::level_t::LOG_LW_INFO)) {
+        if (!wrapper->check_level(util::log::log_wrapper::level_t::LOG_LW_INFO)) {
             info_fn = NULL;
         }
 
@@ -369,8 +369,8 @@ int db_msg_dispatcher::cluster_init(const std::vector<logic_config::LC_DBCONN> &
 }
 
 void db_msg_dispatcher::cluster_request_callback(hiredis::happ::cmd_exec *, struct redisAsyncContext *c, void *r, void *privdata) {
-    redisReply *reply = reinterpret_cast<redisReply *>(r);
-    db_async_data_t *req = reinterpret_cast<db_async_data_t *>(privdata);
+    redisReply *     reply = reinterpret_cast<redisReply *>(r);
+    db_async_data_t *req   = reinterpret_cast<db_async_data_t *>(privdata);
 
     // 所有的请求都应该走标准流程，出错了
     if (NULL == req) {
@@ -436,10 +436,10 @@ int db_msg_dispatcher::cluster_send_msg(hiredis::happ::cluster &clu, const char 
     } else {
         // 异步数据
         db_async_data_t req;
-        req.bus_id = pd;
-        req.task_id = task_id;
+        req.bus_id    = pd;
+        req.task_id   = task_id;
         req.unpack_fn = fn;
-        req.response = NULL;
+        req.response  = NULL;
 
         // 防止异步调用转同步调用，预先使用栈上的DBAsyncData
         cmd = clu.exec(ks, kl, cluster_request_callback, &req, argc, argv, argvlen);
@@ -482,15 +482,15 @@ int db_msg_dispatcher::raw_init(const std::vector<logic_config::LC_DBCONN> &conn
 
     // 设置日志handle
     {
-        hiredis::happ::raw::log_fn_t info_fn = db_msg_dispatcher::log_info_fn;
+        hiredis::happ::raw::log_fn_t info_fn  = db_msg_dispatcher::log_info_fn;
         hiredis::happ::raw::log_fn_t debug_fn = db_msg_dispatcher::log_debug_fn;
 
         util::log::log_wrapper *wrapper = WLOG_GETCAT(log_categorize_t::DB);
-        if (!wrapper->check(util::log::log_wrapper::level_t::LOG_LW_DEBUG)) {
+        if (!wrapper->check_level(util::log::log_wrapper::level_t::LOG_LW_DEBUG)) {
             debug_fn = NULL;
         }
 
-        if (!wrapper->check(util::log::log_wrapper::level_t::LOG_LW_INFO)) {
+        if (!wrapper->check_level(util::log::log_wrapper::level_t::LOG_LW_INFO)) {
             info_fn = NULL;
         }
 
@@ -514,8 +514,8 @@ int db_msg_dispatcher::raw_init(const std::vector<logic_config::LC_DBCONN> &conn
     return hello::err::EN_SYS_INIT;
 }
 void db_msg_dispatcher::raw_request_callback(hiredis::happ::cmd_exec *, struct redisAsyncContext *c, void *r, void *privdata) {
-    redisReply *reply = reinterpret_cast<redisReply *>(r);
-    db_async_data_t *req = reinterpret_cast<db_async_data_t *>(privdata);
+    redisReply *     reply = reinterpret_cast<redisReply *>(r);
+    db_async_data_t *req   = reinterpret_cast<db_async_data_t *>(privdata);
 
     // 所有的请求都应该走标准流程，出错了
     if (NULL == req) {
@@ -577,10 +577,10 @@ int db_msg_dispatcher::raw_send_msg(hiredis::happ::raw &raw_conn, uint64_t task_
     } else {
         // 异步数据
         db_async_data_t req;
-        req.bus_id = pd;
-        req.task_id = task_id;
+        req.bus_id    = pd;
+        req.task_id   = task_id;
         req.unpack_fn = fn;
-        req.response = NULL;
+        req.response  = NULL;
 
         // 防止异步调用转同步调用，预先使用栈上的DBAsyncData
         cmd = raw_conn.exec(raw_request_callback, &req, argc, argv, argvlen);

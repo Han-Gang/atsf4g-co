@@ -6,6 +6,7 @@
 
 #include <atframe/atapp.h>
 #include <libatbus.h>
+#include <libatbus_protocol.h>
 #include <proto_base.h>
 
 
@@ -134,7 +135,7 @@ int32_t ss_msg_dispatcher::notify_send_failed(const atbus::protocol::msg &msg) {
     }
 
     const void *buffer = msg.body.forward->content.ptr;
-    size_t len = msg.body.forward->content.size;
+    size_t      len    = msg.body.forward->content.size;
 
     hello::SSMsg ss_msg;
     start_data_t callback_data;

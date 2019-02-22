@@ -7,7 +7,7 @@
 #include <sstream>
 #include <vector>
 
-
+#include <libatbus_protocol.h>
 #include <atframe/atapp.h>
 #include <common/file_system.h>
 #include <time/time_utility.h>

@@ -6,6 +6,7 @@
 #include <protocol/pbdesc/svr.const.err.pb.h>
 #include <protocol/pbdesc/svr.protocol.pb.h>
 
+#include <libatbus_protocol.h>
 
 #include <config/logic_config.h>
 #include <time/time_utility.h>
@@ -29,13 +30,13 @@ int task_action_router_update::operator()() {
     }
 
     const hello::SSRouterUpdateSync &req_body = req_msg.body().mss_router_update_sync();
-    router_manager_base *mgr = router_manager_set::me()->get_manager(req_body.object().object_type_id());
+    router_manager_base *            mgr      = router_manager_set::me()->get_manager(req_body.object().object_type_id());
     if (NULL == mgr) {
         WLOGERROR("router manager %u invalid", req_body.object().object_type_id());
         return hello::err::EN_SUCCESS;
     }
 
-    router_manager_base::key_t key(req_body.object().object_type_id(), req_body.object().object_inst_id());
+    router_manager_base::key_t          key(req_body.object().object_type_id(), req_body.object().object_inst_id());
     std::shared_ptr<router_object_base> obj = mgr->get_base_cache(key);
     if (!obj) {
         return hello::err::EN_SUCCESS;

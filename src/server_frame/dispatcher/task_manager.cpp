@@ -13,39 +13,39 @@
 
 static void log_wrapper_for_protobuf(::google::protobuf::LogLevel level, const char *filename, int line, const std::string &message) {
     util::log::log_wrapper::caller_info_t caller;
-    caller.file_path = filename;
-    caller.line_number = static_cast<uint32_t>(line);
-    caller.func_name = "protobuf";
+    caller.file_path    = filename;
+    caller.line_number  = static_cast<uint32_t>(line);
+    caller.func_name    = "protobuf";
     caller.rotate_index = 0;
 
     switch (level) {
     case ::google::protobuf::LOGLEVEL_INFO:
-        caller.level_id = util::log::log_wrapper::level_t::LOG_LW_INFO;
+        caller.level_id   = util::log::log_wrapper::level_t::LOG_LW_INFO;
         caller.level_name = "Info";
         break;
 
     case ::google::protobuf::LOGLEVEL_WARNING:
-        caller.level_id = util::log::log_wrapper::level_t::LOG_LW_WARNING;
+        caller.level_id   = util::log::log_wrapper::level_t::LOG_LW_WARNING;
         caller.level_name = "Warn";
         break;
 
     case ::google::protobuf::LOGLEVEL_ERROR:
-        caller.level_id = util::log::log_wrapper::level_t::LOG_LW_ERROR;
+        caller.level_id   = util::log::log_wrapper::level_t::LOG_LW_ERROR;
         caller.level_name = "Error";
         break;
 
     case ::google::protobuf::LOGLEVEL_FATAL:
-        caller.level_id = util::log::log_wrapper::level_t::LOG_LW_FATAL;
+        caller.level_id   = util::log::log_wrapper::level_t::LOG_LW_FATAL;
         caller.level_name = "Fatal";
         break;
 
     default:
-        caller.level_id = util::log::log_wrapper::level_t::LOG_LW_DEBUG;
+        caller.level_id   = util::log::log_wrapper::level_t::LOG_LW_DEBUG;
         caller.level_name = "Debug";
         break;
     }
 
-    if (util::log::log_wrapper::check(WDTLOGGETCAT(util::log::log_wrapper::categorize_t::DEFAULT), caller.level_id)) {
+    if (util::log::log_wrapper::check_level(WDTLOGGETCAT(util::log::log_wrapper::categorize_t::DEFAULT), caller.level_id)) {
         WDTLOGGETCAT(util::log::log_wrapper::categorize_t::DEFAULT)->log(caller, "%s", message.c_str());
     }
 }

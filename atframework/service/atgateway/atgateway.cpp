@@ -11,6 +11,8 @@
 
 #include <uv.h>
 
+#include <libatbus_protocol.h>
+
 #include <common/file_system.h>
 #include <common/string_oprs.h>
 #include <log/log_wrapper.h>
@@ -524,7 +526,7 @@ private:
     }
 
     int proto_inner_callback_on_error(::atframe::gateway::proto_base *, const char *filename, int line, int errcode, const char *errmsg) {
-        if (::util::log::log_wrapper::check(WDTLOGGETCAT(::util::log::log_wrapper::categorize_t::DEFAULT), ::util::log::log_wrapper::level_t::LOG_LW_ERROR)) {
+        if (::util::log::log_wrapper::check_level(WDTLOGGETCAT(::util::log::log_wrapper::categorize_t::DEFAULT), ::util::log::log_wrapper::level_t::LOG_LW_ERROR)) {
 
             WDTLOGGETCAT(::util::log::log_wrapper::categorize_t::DEFAULT)
                 ->log(::util::log::log_wrapper::caller_info_t(::util::log::log_wrapper::level_t::LOG_LW_ERROR, "Error", filename, line, "anonymous"),
