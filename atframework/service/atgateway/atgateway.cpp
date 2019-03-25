@@ -21,7 +21,8 @@
 
 #include "session_manager.h"
 #include <atframe/atapp.h>
-
+#include <libatbus.h>
+#include <libatbus_protocol.h>
 
 static int app_handle_on_send_fail(atapp::app &app, atapp::app::app_id_t src_pd, atapp::app::app_id_t dst_pd, const atbus::protocol::msg &m) {
     atapp::app::app_id_t stop_at = m.head.src_bus_id;
