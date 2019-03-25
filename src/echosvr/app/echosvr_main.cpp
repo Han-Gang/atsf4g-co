@@ -7,7 +7,6 @@
 #include <sstream>
 #include <vector>
 
-
 #include <atframe/atapp.h>
 #include <common/file_system.h>
 #include <libatbus.h>
